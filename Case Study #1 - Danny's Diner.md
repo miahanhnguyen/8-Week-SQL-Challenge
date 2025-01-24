@@ -4,14 +4,15 @@
 ## Entity Relationship Diagram
 ![image](https://github.com/user-attachments/assets/0f83f966-708b-4684-b347-a3a19f220b4b)
 
-
--- 1. What is the total amount each customer spent at the restaurant?
+**1. What is the total amount each customer spent at the restaurant?**
+````sql
 SELECT sales.customer_id, sum(menu.price) total_spent
 FROM sales
 JOIN menu
 	ON sales.product_id = menu.product_id
 GROUP BY sales.customer_id
 ORDER BY sales.customer_id;
+````
 
 -- 2. How many days has each customer visited the restaurant?
 SELECT customer_id, count(distinct order_date) as number_days
