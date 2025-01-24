@@ -1,7 +1,7 @@
 # Case Study #2 - Pizza Runner
 [Case Study #2 - Pizza Runner](https://8weeksqlchallenge.com/case-study-2/)
 
-![image](https://github.com/user-attachments/assets/445ea183-9a61-473d-995e-299878f3e1d8=500x520)
+![image](https://github.com/user-attachments/assets/445ea183-9a61-473d-995e-299878f3e1d8)
 
 
 ## Entity Relationship Diagram
