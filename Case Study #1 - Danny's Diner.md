@@ -214,7 +214,7 @@ GROUP BY amb.customer_id;
 | B           | 320    |
 | A           | 1020   |
 
-**Schema (PostgreSQL v13)**
+##Schema (PostgreSQL v13)
 
     CREATE SCHEMA dannys_diner;
     SET search_path = dannys_diner;
