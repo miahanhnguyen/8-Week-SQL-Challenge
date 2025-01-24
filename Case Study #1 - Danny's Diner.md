@@ -13,14 +13,22 @@ JOIN menu
 GROUP BY sales.customer_id
 ORDER BY sales.customer_id;
 ````
+| customer_id | total_spent |
+| ----------- | ----------- |
+| A           | 76          |
+| B           | 74          |
+| C           | 36          |
 
--- 2. How many days has each customer visited the restaurant?
+
+**2. How many days has each customer visited the restaurant?**
+````sql
 SELECT customer_id, count(distinct order_date) as number_days
 FROM sales
 GROUP BY customer_id;
+````
 
--- 3. What was the first item from the menu purchased by each customer?
--- use CTE for this question
+**3. What was the first item from the menu purchased by each customer?**
+````sql
 WITH rank_sales as (
   SELECT *,
   row_number () over (partition by customer_id order by order_date) as rank
@@ -31,8 +39,10 @@ FROM rank_sales rs
 JOIN menu m
 	ON rs.product_id = m.product_id
  WHERE rank = 1;
+````
  
--- 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
+**4. What is the most purchased item on the menu and how many times was it purchased by all customers?**
+````sql
 SELECT m.product_name, count(s.product_id) as total_purchase
 FROM sales s
 JOIN menu m
@@ -40,8 +50,10 @@ JOIN menu m
 GROUP BY m.product_name
 ORDER BY total_purchase DESC -- From highest to lowest purchase
 LIMIT 1; -- LIMIT to the top purchase
+````
 
--- 5. Which item was the most popular for each customer?
+**5. Which item was the most popular for each customer?**
+````sql
 WITH count_purchase AS (
   SELECT customer_id, product_id, count(product_id) as purchase_count
   FROM sales
@@ -57,9 +69,10 @@ WITH count_purchase AS (
 SELECT customer_id, product_name, rank
 FROM popularity
 WHERE rank = 1; -- WHERE function can only by applied on the column already in the table
-  
+````
 
--- 6. Which item was purchased first by the customer after they became a member?
+**6. Which item was purchased first by the customer after they became a member?**
+````sql
 WITH after_membership AS (
   SELECT s.customer_id, s.order_date, s.product_id, mb.join_date
   FROM sales s
@@ -77,8 +90,10 @@ FROM rank_purchase rp
 JOIN menu m
 	ON m.product_id = rp.product_id
 WHERE rp.rank = 1;
+````
 
--- 7. Which item was purchased just before the customer became a member?
+**7. Which item was purchased just before the customer became a member?**
+````sql
 WITH before_membership AS (
   SELECT s.customer_id, s.order_date, s.product_id, mb.join_date
   FROM sales s
@@ -96,8 +111,10 @@ FROM rank_purchase rp
 JOIN menu m
 	ON m.product_id = rp.product_id
 WHERE rp.rank = 1;
+````
 
--- 8. What is the total items and amount spent for each member before they became a member?
+**8. What is the total items and amount spent for each member before they became a member?**
+````sql
 WITH before_membership AS (
   SELECT s.customer_id, s.order_date, s.product_id, mb.join_date
   FROM sales s
@@ -110,7 +127,10 @@ WITH before_membership AS (
  JOIN menu m
  	ON bmb.product_id = m.product_id
  GROUP BY bmb.customer_id;
--- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
+````
+
+**9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?**
+````sql
 WITH after_membership AS (
   SELECT s.customer_id, s.order_date, s.product_id, mb.join_date
   FROM sales s
@@ -128,8 +148,10 @@ WITH after_membership AS (
  JOIN menu m
  	ON m.product_id = amb.product_id
  GROUP BY amb.customer_id;
+````
     
--- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
+**10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?**
+````sql
 WITH after_membership AS (
   SELECT s.customer_id, s.order_date, s.product_id, mb.join_date
   FROM sales s
@@ -151,6 +173,7 @@ FROM after_membership amb
 JOIN menu m
 	ON m.product_id = amb.product_id
 GROUP BY amb.customer_id;
+````
 
 **Schema (PostgreSQL v13)**
 
