@@ -1,8 +1,9 @@
 # Case Study #1 - Danny's Diner
-![image](https://github.com/user-attachments/assets/8eaf694a-af9d-4d67-9dce-01542f36385d)
+<img src="https://user-images.githubusercontent.com/81607668/127727503-9d9e7a25-93cb-4f95-8bd0-20b87cb4b459.png" alt="Image" width="500" height="520">
 
 ## Entity Relationship Diagram
-https://dbdiagram.io/d/Dannys-Diner-608d07e4b29a09603d12edbd?utm_source=dbdiagram_embed&utm_medium=bottom_open
+![image](https://github.com/user-attachments/assets/0f83f966-708b-4684-b347-a3a19f220b4b)
+
 
 -- 1. What is the total amount each customer spent at the restaurant?
 SELECT sales.customer_id, sum(menu.price) total_spent
