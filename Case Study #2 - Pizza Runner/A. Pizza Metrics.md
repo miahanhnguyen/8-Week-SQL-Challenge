@@ -35,6 +35,6 @@ FROM cleaned_customer_orders c
 JOIN pizza_names p
 ON c.pizza_id = p.pizza_id
 ORDER BY c.customer_id;
-````sql
+````
 
 6. What was the maximum number of pizzas delivered in a single order?
