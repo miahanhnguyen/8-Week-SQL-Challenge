@@ -16,3 +16,45 @@ C. Ingredient Optimisation
 D. Pricing and Ratings  
 E. Bonus DML Challenges (DML = Data Manipulation Language)  
 
+## Data cleaning
+Create a cleaned table for customer_orders and runner_orders
+````sql
+CREATE TABLE cleaned_customer_orders AS
+SELECT order_id, customer_id, pizza_id,
+CASE
+	WHEN exclusions = 'null' or exclusions = '' THEN NULL
+    ELSE exclusions
+END AS exclusions,
+CASE
+	WHEN extras = 'null' or extras = '' THEN NULL
+    ELSE extras
+END AS extras,
+order_time
+FROM customer_orders;
+
+CREATE TABLE cleaned_runner_orders AS
+SELECT order_id, runner_id,
+NULLIF(pickup_time,'null')::TIMESTAMP AS pickup_time,
+CASE
+    WHEN distance = 'null' THEN NULL
+    WHEN distance LIKE '%km' THEN 
+    CAST(
+      REGEXP_REPLACE(distance, '\D+', '', 'g') AS FLOAT
+      )
+    ELSE CAST(distance AS FLOAT) -- Using CAST to type cast the data to FLOAT
+END AS distance,
+CASE
+    WHEN duration = 'null' THEN NULL
+    WHEN duration LIKE '%min%' THEN 
+        CAST(
+            REGEXP_REPLACE(duration, '\D+', '', 'g') AS INTEGER
+        )
+    ELSE 
+        CAST(duration AS INTEGER)
+END AS duration,
+CASE
+	WHEN cancellation = 'null' or cancellation = '' THEN NULL
+    ELSE cancellation
+END AS cancellation
+FROM runner_orders;
+````
