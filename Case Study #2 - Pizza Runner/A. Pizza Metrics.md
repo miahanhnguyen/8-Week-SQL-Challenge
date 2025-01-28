@@ -8,7 +8,7 @@ FROM cleaned_customer_orders;
 ````sql
 SELECT count(distinct order_id) as unique_order
 FROM cleaned_customer_orders;
-````sql
+````
 
 3. How many successful orders were delivered by each runner?
 ````sql
