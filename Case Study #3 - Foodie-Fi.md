@@ -31,7 +31,7 @@
 | 8           | 2020-08-03 | pro monthly   | 19.90  |
 
 ## B. Data Analysis  
-** 1. How many customers has Foodie-Fi ever had?
+**1. How many customers has Foodie-Fi ever had?
 ````sql
     SELECT count(distinct customer_id)
     FROM subscriptions;
