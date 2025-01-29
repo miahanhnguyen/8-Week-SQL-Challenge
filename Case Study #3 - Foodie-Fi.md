@@ -31,7 +31,7 @@
 | 8           | 2020-08-03 | pro monthly   | 19.90  |
 
 ## B. Data Analysis  
-**1. How many customers has Foodie-Fi ever had?
+**1. How many customers has Foodie-Fi ever had?**
 ````sql
     SELECT count(distinct customer_id)
     FROM subscriptions;
@@ -40,7 +40,7 @@
 | ----- |
 | 1000  |
 
-** 2. What is the monthly distribution of trial plan start_date values for our dataset - use the start of the month as the group by value
+**2. What is the monthly distribution of trial plan start_date values for our dataset - use the start of the month as the group by value**
 ````sql
     SELECT date_trunc('month', start_date) as month_start,
     count(*) as trial_count
@@ -64,7 +64,7 @@
 | 2020-11-01 00:00:00+00 | 75          |
 | 2020-12-01 00:00:00+00 | 84          |
 
-** 3. What plan start_date values occur after the year 2020 for our dataset? Show the breakdown by count of events for each plan_name
+**3. What plan start_date values occur after the year 2020 for our dataset? Show the breakdown by count of events for each plan_name**
 ````sql
     SELECT p.plan_name, count (p.plan_name) as count_plan
     FROM plans p
@@ -81,7 +81,7 @@
 | pro monthly   | 60         |
 | basic monthly | 8          |
 
-** 4. What is the customer count and percentage of customers who have churned rounded to 1 decimal place?
+**4. What is the customer count and percentage of customers who have churned rounded to 1 decimal place?**
 ````sql
     WITH churn_customer AS (
       SELECT count(distinct customer_id) as churn_count
@@ -103,7 +103,7 @@
 | -------------- | ------------------- |
 | 307            | 30.7                |
 
-** 5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?
+**5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?**
 - Using self-join to separate plan_id 0 and 4 into 2 separate columns and join on customer_id
 - Filter out a table with customer starts with trial followed by churn immediately
 ````sql
