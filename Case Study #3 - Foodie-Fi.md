@@ -106,6 +106,7 @@
 **5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?**
 - Using self-join to separate plan_id 0 and 4 into 2 separate columns and join on customer_id
 - Filter out a table with customer starts with trial followed by churn immediately
+- Use a middle table s3 subscription to ensure there is no start_date in between the trial and churn date (hence using NOT EXISTS)
 ````sql
     WITH trial_churn_filter AS (
     SELECT s1.customer_id
@@ -130,11 +131,49 @@
     FROM trial_churn_filter
     )
     
-    Select cc.churn_count as customer_count,
-    round(cc.churn_count::decimal/tc.total_count * 100, 0) as customer_percentage
-    from churn_customer cc
-    cross join total_customer tc;
+    SELECT cc.churn_count as customer_count,
+    ROUND(cc.churn_count::decimal/tc.total_count * 100, 0) as customer_percentage
+    FROM churn_customer cc
+    CROSS JOIN total_customer tc;
 ````
 | customer_count | customer_percentage |
 | -------------- | ------------------- |
 | 92             | 9                   |
+
+**6. What is the number and percentage of customer plans after their initial free trial?**
+- Filter out the customer plans followed by a trial
+- Calculate the total number of customer from this filter table and percentage of each plan of this filter table
+````sql
+    WITH plan_filter AS (
+    SELECT s1.customer_id, s2.plan_id
+    FROM subscriptions s1
+    JOIN subscriptions s2
+    ON s1.customer_id = s2.customer_id
+    WHERE s1.plan_id = 0 and s2.plan_id != 0
+    AND s1.start_date < s2.start_date
+    ),
+    total_customer AS (
+    SELECT count(distinct customer_id) as total_count
+    FROM plan_filter
+    ),
+    plan_customer AS (
+    SELECT p.plan_id, p.plan_name, count(distinct customer_id) as plan_count
+    FROM plan_filter pf
+    JOIN plans p
+      ON pf.plan_id = p.plan_id
+    GROUP BY p.plan_name, p.plan_id
+    ORDER BY p.plan_id
+    )
+    
+    SELECT pc.plan_name, pc.plan_count,
+    ROUND(pc.plan_count::decimal/tc.total_count * 100, 0) as plan_percentage
+    FROM plan_customer pc
+    CROSS JOIN total_customer tc;
+````
+
+| plan_name     | plan_count | plan_percentage |
+| ------------- | ---------- | --------------- |
+| basic monthly | 546        | 55              |
+| pro monthly   | 539        | 54              |
+| pro annual    | 258        | 26              |
+| churn         | 307        | 31              |
