@@ -177,3 +177,46 @@
 | pro monthly   | 539        | 54              |
 | pro annual    | 258        | 26              |
 | churn         | 307        | 31              |
+
+**7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?**
+- Each customer can have multiple plans before that day. Need to filter the latest customer plan only
+- Otherwise one customer with multiple plans will be counted multiple times
+````sql
+    WITH latest_plan AS (
+    SELECT s.customer_id, s.plan_id
+    FROM subscriptions s
+    WHERE s.start_date <= '2020-12-31'
+    AND NOT EXISTS ( -- This condition is to ensure that each customer is filtered with the latest plan
+      SELECT 1
+      FROM subscriptions s1
+      WHERE s1.customer_id = s.customer_id
+      AND s1.start_date <= '2020-12-31'
+      AND s1.start_date > s.start_date
+      )
+    ),
+    total_customer AS (
+    SELECT count(distinct customer_id) as total_count
+    FROM latest_plan
+    ),
+    plan_customer AS (
+    SELECT p.plan_id, p.plan_name, count(distinct customer_id) as plan_count
+    FROM latest_plan lp
+    JOIN plans p
+      ON lp.plan_id = p.plan_id
+    GROUP BY p.plan_name, p.plan_id
+    ORDER BY p.plan_id
+    )
+    
+    SELECT pc.plan_name, pc.plan_count,
+    round(pc.plan_count::decimal/tc.total_count * 100, 0) as plan_percentage
+    FROM plan_customer pc
+    CROSS JOIN total_customer tc;
+````
+
+| plan_name     | plan_count | plan_percentage |
+| ------------- | ---------- | --------------- |
+| trial         | 19         | 2               |
+| basic monthly | 224        | 22              |
+| pro monthly   | 326        | 33              |
+| pro annual    | 195        | 20              |
+| churn         | 236        | 24              |
