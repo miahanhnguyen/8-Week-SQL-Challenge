@@ -1,8 +1,7 @@
 # Case Study #2 - Pizza Runner
 [Case Study #2 - Pizza Runner](https://8weeksqlchallenge.com/case-study-2/)
 
-![image](https://github.com/user-attachments/assets/445ea183-9a61-473d-995e-299878f3e1d8)
-
+<img src="https://user-images.githubusercontent.com/81607668/127271856-3c0d5b4a-baab-472c-9e24-3c1e3c3359b2.png" alt="Image" width="500" height="520">
 
 ## Entity Relationship Diagram
 ![image](https://github.com/user-attachments/assets/0f2e58ad-7bfb-4d29-b1db-ec978f8a49c1)
@@ -17,7 +16,9 @@ D. Pricing and Ratings
 E. Bonus DML Challenges (DML = Data Manipulation Language)  
 
 ## Data cleaning
-Create a cleaned table for customer_orders and runner_orders
+- Retain the raw tables and create a copy of these tables to perform data cleaning
+- Convert all the blank and 'null' value to NULL in SQL
+- Standardise the time and distance column in runner_orders to INT type
 ````sql
 CREATE TABLE cleaned_customer_orders AS
 SELECT order_id, customer_id, pizza_id,
