@@ -1,3 +1,6 @@
+# Case Study #3: Foodie-Fi
+<img src="https://user-images.githubusercontent.com/81607668/129742132-8e13c136-adf2-49c4-9866-dec6be0d30f0.png" width="500" height="520" alt="image">
+
 ## A. A brief description about each customer’s onboarding journey based off the 8 sample customers provided in the sample from the subscriptions table.
 - Customer usually started with the trial plan which was free (price = 0.00)
 - After the trial period (7 days), majority of customers upgraded to basic monthly plan ($9.90)
