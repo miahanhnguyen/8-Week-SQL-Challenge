@@ -1,7 +1,12 @@
-# Case Study #3: Foodie-Fi
+# Case Study #3 - Foodie-Fi
+[Case Study #3 - Foodie-Fi](https://8weeksqlchallenge.com/case-study-3/)
+
 <img src="https://user-images.githubusercontent.com/81607668/129742132-8e13c136-adf2-49c4-9866-dec6be0d30f0.png" width="500" height="520" alt="image">
 
-## A. A brief description about each customer’s onboarding journey based off the 8 sample customers provided in the sample from the subscriptions table.
+## Entity Relationship Diagram
+![image](https://github.com/user-attachments/assets/fcf6fee1-a76f-401c-a9a1-81b8f930eb83)
+
+## A. A brief description about each customer’s onboarding journey based off the first 8 sample customers.
 - Customer usually started with the trial plan which was free (price = 0.00)
 - After the trial period (7 days), majority of customers upgraded to basic monthly plan ($9.90)
 - 1 customer in this summary (id = 2) upgraded to pro annual right after the trial period ($199.00)
