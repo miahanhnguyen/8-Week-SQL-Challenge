@@ -1,4 +1,9 @@
-## A. Based off the 8 sample customers provided in the sample from the subscriptions table, write a brief description about each customer’s onboarding journey.
+## A. A brief description about each customer’s onboarding journey based off the 8 sample customers provided in the sample from the subscriptions table.
+- Customer usually started with the trial plan which was free (price = 0.00)
+- After the trial period (7 days), majority of customers upgraded to basic monthly plan ($9.90)
+- 1 customer in this summary (id = 2) upgraded to pro annual right after the trial period ($199.00)
+- 1 customer (id = 8) upgraded to pro monthly (19.90) 2 months after basic monthly plan
+
 ````sql
     SELECT s.customer_id, s.start_date, p.plan_name, p.price
     FROM subscriptions s
@@ -106,7 +111,7 @@
 **5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?**
 - Using self-join to separate plan_id 0 and 4 into 2 separate columns and join on customer_id
 - Filter out a table with customer starts with trial followed by churn immediately
-- Use a middle table s3 subscription to ensure there is no start_date in between the trial and churn date (hence using NOT EXISTS)
+- Use a middle table s3 subscription to ensure that there is no start_date in between the trial and churn date (using NOT EXISTS)
 ````sql
     WITH trial_churn_filter AS (
     SELECT s1.customer_id
@@ -141,7 +146,7 @@
 | 92             | 9                   |
 
 **6. What is the number and percentage of customer plans after their initial free trial?**
-- Filter out the customer plans followed by a trial
+- Filter out the customer plans followed by a trial using self-join
 - Calculate the total number of customer from this filter table and percentage of each plan of this filter table
 ````sql
     WITH plan_filter AS (
@@ -179,8 +184,9 @@
 | churn         | 307        | 31              |
 
 **7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?**
-- Each customer can have multiple plans before that day. Need to filter the latest customer plan only
-- Otherwise one customer with multiple plans will be counted multiple times
+- Filter out customer plans before 2020-12-31. Since each customer can have multiple plans before that day (for example: trial followed by basic monthly etc.), we need to filter out the latest plan for each customer only
+- To do that, after filtering plans before 2020-12-31, using self-join to exclude all the plans before the latest plan filter table (hence using NOT EXISTS)
+- If we don't do this filter, the count and percentage breakdown will be inflated as one customer can have multiple plans.
 ````sql
     WITH latest_plan AS (
     SELECT s.customer_id, s.plan_id
