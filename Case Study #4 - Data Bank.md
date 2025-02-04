@@ -108,3 +108,42 @@ WHERE txn_type = 'deposit';
 |total_deposits	|avg_deposit_amount  |
 |---------------|--------------------|
 |2671	        |508.8611007113440659|
+
+**3. For each month - how many Data Bank customers make more than 1 deposit and either 1 purchase or 1 withdrawal in a single month?**
+- Create a CTE to mark customers who make deposit, purchase and withdrawal, sum the total of those, grouped by each customer_id
+- With the 3 new columns: deposit_count, purchase_count, withdrawal_count, we can then filter out who make more than 1 deposit and at least 1 purchase or 1 withdrawal each month
+````sql
+WITH customer_activity AS (
+  SELECT customer_id,
+  DATE_TRUNC('month', txn_date)::date as month,
+  SUM (
+    CASE
+    WHEN txn_type = 'deposit' THEN 1 
+    ELSE 0
+    END) AS deposit_count,
+  SUM (
+    CASE
+    WHEN txn_type = 'purchase' THEN 1
+    ELSE 0
+    END) AS purchase_count,
+  SUM (
+    CASE
+    WHEN txn_type = 'withdrawal' THEN 1
+    ELSE 0
+    END) AS withdrawal_count
+  FROM customer_transactions
+  GROUP BY customer_id, month
+  ) 
+SELECT month, COUNT(customer_id) as number_customer
+FROM customer_activity
+WHERE deposit_count > 1
+AND (purchase_count >= 1 OR withdrawal_count >= 1)
+GROUP BY month
+ORDER BY month;
+````
+|month	    |number_customer|
+|-----------|---------------|
+|2020-01-01	|168            |
+|2020-02-01	|181            |
+|2020-03-01	|192            |
+|2020-04-01	|70             |
