@@ -96,3 +96,15 @@ group by txn_type;
 |purchase	|806537  |
 |deposit	|1359168 |
 |withdrawal	|793003  |
+
+**2. What is the average total historical deposit counts and amounts for all customers?**
+````sql
+SELECT 
+    COUNT(*) AS total_deposits,            -- Counts all deposit transactions
+    AVG(txn_amount) AS avg_deposit_amount  -- Averages deposit amounts
+FROM customer_transactions
+WHERE txn_type = 'deposit';
+````
+|total_deposits	|avg_deposit_amount  |
+|---------------|--------------------|
+|2671	        |508.8611007113440659|
