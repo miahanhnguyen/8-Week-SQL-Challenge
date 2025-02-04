@@ -83,3 +83,16 @@ where end_date != '9999-12-31';
 | 3         | 1      | 24              | 28              |
 | 4         | 1      | 23              | 28              |
 | 5         | 1      | 24              | 28              |
+
+## A. Customer Transactions
+**1. What is the unique count and total amount for each transaction type?**
+````sql
+select distinct txn_type, sum(txn_amount)
+from customer_transactions
+group by txn_type;
+````
+|txn_type	|sum     |
+|-----------|--------|
+|purchase	|806537  |
+|deposit	|1359168 |
+|withdrawal	|793003  |
