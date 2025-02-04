@@ -16,7 +16,7 @@
 | ----------- |
 | 5           |
 
-**2.What is the number of nodes per region?**
+**2. What is the number of nodes per region?**
 ````sql
     SELECT distinct region_id, count(distinct node_id) as number_node
     FROM customer_nodes
@@ -30,7 +30,7 @@
 | 3         | 5           |
 | 2         | 5           |
 
-**3.How many customers are allocated to each region?**
+**3. How many customers are allocated to each region?**
 ````sql
     SELECT distinct region_id, count(distinct customer_id) as number_customer
     FROM customer_nodes
@@ -44,7 +44,7 @@
 | 2         | 105             |
 | 5         | 88              |
 
-**4.How many days on average are customers reallocated to a different node?**
+**4. How many days on average are customers reallocated to a different node?**
 ````sql
     SELECT avg(end_date - start_date) as avg_reallocation
     FROM customer_nodes;
@@ -52,6 +52,7 @@
 | avg_reallocation    |
 | ------------------- |
 | 416373.411714285714 |
+
 **Comment:**
 - This number seems very unrealistic (416373 days ~ 1140.75 years)
 - Check MIN and MAX start_date and end_date to see the recorded range in the database: '9999-12-31' is the MAX end_date
@@ -65,7 +66,7 @@ where end_date != '9999-12-31';
 | ------------------- |
 | 14.6340000000000000 |
 
-**5.What is the median, 80th and 95th percentile for this same reallocation days metric for each region?**
+**5. What is the median, 80th and 95th percentile for this same reallocation days metric for each region?**
 ````sql
     select region_id,
     percentile_cont (0.05) within group (order by(end_date - start_date)) as median,
