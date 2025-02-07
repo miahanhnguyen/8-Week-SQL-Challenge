@@ -147,3 +147,74 @@ ORDER BY month;
 |2020-02-01	|181            |
 |2020-03-01	|192            |
 |2020-04-01	|70             |
+
+**4. What is the closing balance for each customer at the end of the month?**
+- Create a CTE to mark customers who make deposit, purchase and withdrawal, sum the total of those, grouped by each customer_id
+- With the 3 new columns: deposit_count, purchase_count, withdrawal_count, we can then filter out who make more than 1 deposit and at least 1 purchase or 1 withdrawal each month
+````sql
+-- ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    -- This defines the window frame for the SUM() window function.
+    -- ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW means:
+    -- UNBOUNDED PRECEDING → Start from the very first row (earliest month) in the partition (i.e., for that customer).
+    -- CURRENT ROW → Include the current row in the sum.
+    -- This ensures that the sum accumulates from the first transaction up to the current row.
+    WITH monthly_transaction AS (
+      SELECT customer_id,
+      date_trunc('month',txn_date)::date as month,
+      SUM (CASE
+           WHEN txn_type = 'deposit' THEN txn_amount
+           WHEN txn_type IN ('purchase', 'withdraw') THEN -txn_amount
+           ELSE 0
+           END) AS net_monthly_change
+      FROM customer_transactions
+      GROUP BY customer_id, month
+      ),
+      cumulative_balance AS (
+        SELECT customer_id,
+        month,
+        SUM(net_monthly_change) OVER (
+          PARTITION BY customer_id
+          ORDER BY month
+          ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+          ) AS closing_balance
+        FROM monthly_transaction
+        )
+    SELECT *
+    FROM cumulative_balance
+    ORDER BY customer_id, month;
+````
+
+| customer_id | month      | closing_balance |
+| ----------- | ---------- | --------------- |
+| 1           | 2020-01-01 | 312             |
+| 1           | 2020-03-01 | -640            |
+| 2           | 2020-01-01 | 549             |
+| 2           | 2020-03-01 | 610             |
+| 3           | 2020-01-01 | 144             |
+| 3           | 2020-02-01 | -821            |
+| 3           | 2020-03-01 | -821            |
+| 3           | 2020-04-01 | -328            |
+| 4           | 2020-01-01 | 848             |
+| 4           | 2020-03-01 | 655             |
+| 5           | 2020-01-01 | 1780            |
+| 5           | 2020-03-01 | 389             |
+| 5           | 2020-04-01 | 389             |
+| 6           | 2020-01-01 | 733             |
+| 6           | 2020-02-01 | 117             |
+| 6           | 2020-03-01 | 1898            |
+| 7           | 2020-01-01 | 964             |
+| 7           | 2020-02-01 | 3173            |
+| 7           | 2020-03-01 | 2606            |
+| 7           | 2020-04-01 | 3221            |
+| 8           | 2020-01-01 | 587             |
+| 8           | 2020-02-01 | 587             |
+| 8           | 2020-03-01 | 1076            |
+| 8           | 2020-04-01 | 104             |
+| 9           | 2020-01-01 | 849             |
+| 9           | 2020-02-01 | 849             |
+| 9           | 2020-03-01 | 2225            |
+| 9           | 2020-04-01 | 3178            |
+| 10          | 2020-01-01 | -138            |
+| 10          | 2020-02-01 | 972             |
+| 10          | 2020-03-01 | -157            |
+| 10          | 2020-04-01 | -1674           |
