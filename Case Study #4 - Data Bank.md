@@ -84,7 +84,7 @@ where end_date != '9999-12-31';
 | 4         | 1      | 23              | 28              |
 | 5         | 1      | 24              | 28              |
 
-## A. Customer Transactions
+## B. Customer Transactions
 **1. What is the unique count and total amount for each transaction type?**
 ````sql
 select distinct txn_type, sum(txn_amount)
