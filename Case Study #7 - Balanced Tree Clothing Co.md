@@ -7,25 +7,15 @@
 ![image](https://github.com/user-attachments/assets/f9f41b1c-50c3-4961-841c-48c247db2285)
 
 ### A. High Level Sales Analysis
-**1. What was the total quantity sold for all products?**
+**Total quantity sold for all products, total generated revenue before discounts, total discount amount**
 ````sql
-SELECT pd.product_name, SUM(s.qty) as total_qty
-FROM balanced_tree.product_details pd
-JOIN balanced_tree.sales s
-ON pd.product_id = s.prod_id
-GROUP BY pd.product_name;
+SELECT 
+	SUM(qty) as total_qty,
+    SUM(price * qty) as total_revenue,
+    SUM(price * qty * discount/100) as total_discount
+FROM balanced_tree.sales;
 ````
-|product_name |	total_qty|
-|------------|----------|
-|White Tee Shirt - Mens|	3800|
-|Navy Solid Socks - Mens|	3792|
-|Grey Fashion Jacket - Womens|	3876|
-|Navy Oversized Jeans - Womens|	3856|
-|Pink Fluro Polkadot Socks - Mens|	3770|
-|Khaki Suit Jacket - Womens|	3752|
-|Black Straight Jeans - Womens|	3786|
-|White Striped Socks - Mens|	3655|
-|Blue Polo Shirt - Mens|	3819|
-|Indigo Rain Jacket - Womens|	3757|
-|Cream Relaxed Jeans - Womens|	3707|
-|Teal Button Up Shirt - Mens|	3646|
+
+|total_qty|	total_revenue|	total_discount|
+|-------|--------|-------|
+|45216|	1289453|	149486|
